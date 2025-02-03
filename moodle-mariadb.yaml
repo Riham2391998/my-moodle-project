@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moodle-mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moodle-mariadb
+  template:
+    metadata:
+      labels:
+        app: moodle-mariadb
+    spec:
+      containers:
+      - name: moodle-mariadb
+        image: bitnami/mariadb:latest
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: "rootpassword"
+        - name: MARIADB_DATABASE
+          value: "bitnami_moodle"
+        - name: MARIADB_USER
+          value: "bn_moodle"
+        - name: MARIADB_PASSWORD
+          value: "password"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moodle-mariadb
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: moodle-mariadb
